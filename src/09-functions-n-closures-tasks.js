@@ -64,13 +64,14 @@ function getPowerFunction(/* exponent */) {
  *   getPolynom(8)     => y = 8
  *   getPolynom()      => null
  */
-function getPolynom(...args) {
-  return function fun(x) {
-    if (!args.length) {
-      return null;
-    }
-    return Array.from(args).reverse().reduce((ac, value, ind) => ac + (value * (x ** ind)));
-  };
+function getPolynom() {
+  throw new Error('Not implemented');
+  // return function fun(x) {
+  //   if (!args.length) {
+  //     return null;
+  //   }
+  //   return Array.from(args).reverse().reduce((ac, value, ind) => ac + (value * (x ** ind)));
+  // };
 }
 
 
