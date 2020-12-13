@@ -241,8 +241,24 @@ function findFirstSingleChar(str) {
  *   5, 3, true, true   => '[3, 5]'
  *
  */
-function getIntervalString(/* a, b, isStartIncluded, isEndIncluded */) {
-  throw new Error('Not implemented');
+function getIntervalString(a, b, isStartIncluded, isEndIncluded) {
+  let res = '';
+  if (isStartIncluded) {
+    res += '[';
+  } else {
+    res += '(';
+  }
+  if (a > b) {
+    res += `${b}, ${a}`;
+  } else {
+    res += `${a}, ${b}`;
+  }
+  if (isEndIncluded) {
+    res += ']';
+  } else {
+    res += ')';
+  }
+  return res;
 }
 
 
@@ -275,8 +291,8 @@ function reverseString(str) {
  *   87354 => 45378
  *   34143 => 34143
  */
-function reverseInteger(/* num */) {
-  throw new Error('Not implemented');
+function reverseInteger(num) {
+  return num.toString().split('').reverse().join('');
 }
 
 
@@ -336,8 +352,14 @@ function isCreditCardNumber(ccn) {
  *   10000 ( 1+0+0+0+0 = 1 ) => 1
  *   165536 (1+6+5+5+3+6 = 26,  2+6 = 8) => 8
  */
-function getDigitalRoot(/* num */) {
-  throw new Error('Not implemented');
+function getDigitalRoot(num) {
+  const arr = num.toString().split('');
+  let res = arr.reduce((ac, value) => +ac + +value);
+  if (res > 9) {
+    res = res.toString().split('');
+    res = res.reduce((ac, value) => +ac + +value);
+  }
+  return res;
 }
 
 
@@ -403,8 +425,15 @@ function isBracketsBalanced(str) {
  *    365, 4  => '11231'
  *    365, 10 => '365'
  */
-function toNaryString(/* num, n */) {
-  throw new Error('Not implemented');
+function toNaryString(num, n) {
+  let number = num;
+  const res = [];
+  while (number >= n) {
+    res.push(number % n);
+    number = Math.trunc(number / n);
+  }
+  res.push(number);
+  return res.reverse().join('');
 }
 
 
@@ -460,8 +489,24 @@ function getCommonDirectoryPath(pathes) {
  *                         [ 6 ]]
  *
  */
-function getMatrixProduct(/* m1, m2 */) {
-  throw new Error('Not implemented');
+function getMatrixProduct(m1, m2) {
+  const rowsM1 = m1.length;
+  const rowsM2 = m2.length;
+  const colsM2 = m2[0].length;
+  const res = [];
+  for (let i = 0; i < rowsM1; i += 1) {
+    res[i] = [];
+  }
+  for (let k = 0; k < colsM2; k += 1) {
+    for (let i = 0; i < rowsM1; i += 1) {
+      let numb = 0;
+      for (let j = 0; j < rowsM2; j += 1) {
+        numb += m1[i][j] * m2[j][k];
+      }
+      res[i][k] = numb;
+    }
+  }
+  return res;
 }
 
 
