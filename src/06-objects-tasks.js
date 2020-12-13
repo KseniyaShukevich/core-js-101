@@ -42,8 +42,8 @@ function Rectangle(width, height) {
  *    [1,2,3]   =>  '[1,2,3]'
  *    { width: 10, height : 20 } => '{"height":10,"width":20}'
  */
-function getJSON(/* obj */) {
-  throw new Error('Not implemented');
+function getJSON(obj) {
+  return JSON.stringify(obj);
 }
 
 
@@ -120,32 +120,105 @@ function fromJSON(proto, json) {
  */
 
 const cssSelectorBuilder = {
-  element(/* value */) {
-    throw new Error('Not implemented');
+  res: '',
+  isEl: false,
+  isId: false,
+  isPsEl: false,
+  order: ['element', 'id', 'class', 'attribute', 'pseudo-class', 'pseudo-element'],
+  index: -1,
+  element(value) {
+    if (this.isEl) {
+      this.getErr();
+    }
+    const cThis = { ...this };
+    cThis.isEl = true;
+    cThis.res += `${value}`;
+    if (cThis.index > cThis.order.indexOf('element')) {
+      cThis.getErrOrder();
+    } else {
+      cThis.index = cThis.order.indexOf('element');
+    }
+    return cThis;
   },
 
-  id(/* value */) {
-    throw new Error('Not implemented');
+  id(value) {
+    if (this.isId) {
+      this.getErr();
+    }
+    const cThis = { ...this };
+    cThis.isId = true;
+    cThis.res += `#${value}`;
+    if (cThis.index > cThis.order.indexOf('id')) {
+      cThis.getErrOrder();
+    } else {
+      cThis.index = cThis.order.indexOf('id');
+    }
+    return cThis;
   },
 
-  class(/* value */) {
-    throw new Error('Not implemented');
+  class(value) {
+    if (this.index > this.order.indexOf('class')) {
+      this.getErrOrder();
+    } else {
+      this.index = this.order.indexOf('class');
+    }
+    this.res += `.${value}`;
+    return this;
   },
 
-  attr(/* value */) {
-    throw new Error('Not implemented');
+  attr(value) {
+    if (this.index > this.order.indexOf('attribute')) {
+      this.getErrOrder();
+    } else {
+      this.index = this.order.indexOf('attribute');
+    }
+    this.res += `[${value}]`;
+    return this;
   },
 
-  pseudoClass(/* value */) {
-    throw new Error('Not implemented');
+  pseudoClass(value) {
+    if (this.index > this.order.indexOf('pseudo-class')) {
+      this.getErrOrder();
+    } else {
+      this.index = this.order.indexOf('pseudo-class');
+    }
+    this.res += `:${value}`;
+    return this;
   },
 
-  pseudoElement(/* value */) {
-    throw new Error('Not implemented');
+  pseudoElement(value) {
+    if (this.isPsEl) {
+      this.getErr();
+    }
+    const cThis = { ...this };
+    cThis.isPsEl = true;
+    cThis.res += `::${value}`;
+    if (cThis.index > cThis.order.indexOf('pseudo-element')) {
+      cThis.getErrOrder();
+    } else {
+      cThis.index = cThis.order.indexOf('pseudo-element');
+    }
+    return cThis;
   },
 
-  combine(/* selector1, combinator, selector2 */) {
-    throw new Error('Not implemented');
+  combine(selector1, combinator, selector2) {
+    this.res = `${selector1.stringify()} ${combinator} ${selector2.stringify()}`;
+    return this;
+  },
+
+  stringify() {
+    const buff = this.res;
+    this.res = '';
+    this.index = -1;
+    return buff;
+  },
+
+  getErr() {
+    throw new Error('Element, id and pseudo-element should not occur more then one time inside the selector');
+  },
+
+  getErrOrder() {
+    throw new Error('Selector parts should be arranged in the following order: element, id, class, attribute, pseudo-class, pseudo-element');
   },
 };
 

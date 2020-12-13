@@ -34,8 +34,8 @@ function parseDataFromRfc2822(value) {
  *    '2016-01-19T16:07:37+00:00'    => Date()
  *    '2016-01-19T08:07:37Z' => Date()
  */
-function parseDataFromIso8601(/* value */) {
-  throw new Error('Not implemented');
+function parseDataFromIso8601(value) {
+  return new Date(value);
 }
 
 
@@ -78,8 +78,27 @@ function isLeapYear(date) {
  *    Date(2000,1,1,10,0,0),  Date(2000,1,1,10,0,0,250)     => "00:00:00.250"
  *    Date(2000,1,1,10,0,0),  Date(2000,1,1,15,20,10,453)   => "05:20:10.453"
  */
-function timeSpanToString(/* startDate, endDate */) {
-  throw new Error('Not implemented');
+function timeSpanToString(startDate, endDate) {
+  function addZero(n) {
+    if (n < 10) {
+      return `0${n}`;
+    }
+    return n;
+  }
+  function addZ(n) {
+    if (n < 10) {
+      return `00${n}`;
+    }
+    if (n > 10 && n < 100) {
+      return `0${n}`;
+    }
+    return n;
+  }
+  const hour = endDate.getHours() - startDate.getHours();
+  const minutes = endDate.getMinutes() - startDate.getMinutes();
+  const seconds = endDate.getSeconds() - startDate.getSeconds();
+  const ms = endDate.getMilliseconds() - startDate.getMilliseconds();
+  return `${addZero(hour)}:${addZero(minutes)}:${addZero(seconds)}.${addZ(ms)}`;
 }
 
 
